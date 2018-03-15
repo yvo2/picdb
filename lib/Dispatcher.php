@@ -1,5 +1,10 @@
 <?php
+require_once 'View.php';
 
+/**
+ * Class Dispatcher
+ * Dispatches a request to the controller
+ */
 class Dispatcher {
 
     function dispatch() {
@@ -9,8 +14,8 @@ class Dispatcher {
 
         $uriParts = explode('/', $uri);
 
-        if (count($uriParts) == 0) {
-            $controller = "DefaultController";
+        if (count($uriParts) == 0 || $uri == '') {
+            $controller = "Home";
             $action = "index";
         } else if (count($uriParts) == 1) {
             $controller = $uriParts[0];
@@ -21,6 +26,13 @@ class Dispatcher {
         } else {
             return false;
         }
+
+        require_once "controller/$controller.php";
+        $ctrl = new $controller();
+
+        $view = new View();
+        $view = $ctrl->$action($view);
+        $view->display();
 
         return true;
     }
