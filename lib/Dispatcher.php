@@ -1,5 +1,6 @@
 <?php
 require_once 'View.php';
+require_once 'RootView.php';
 
 /**
  * Class Dispatcher
@@ -32,7 +33,9 @@ class Dispatcher {
 
         $view = new View();
         $view = $ctrl->$action($view);
-        $view->display();
+
+        $rtView = new RootView($view);
+        $rtView->display();
 
         return true;
     }
