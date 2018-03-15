@@ -1,0 +1,39 @@
+.full-width {
+    width: 100%;
+}
+
+.half-width {
+    width: 45%;
+}
+
+.button-margin {
+    margin-bottom: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.nav-wrapper {
+    background-color: #26a69a
+}
+
+.blog-title {
+    float: left;
+    color: black;
+}
+
+.blog-date {
+    float: right;
+}
+
+.row-centered {
+    display: flex;
+    justify-content: center;
+}
+
+.input-form {
+    width: 500px;
+}
+
+.successCard {
+    background-color: #26a69a;
+}
