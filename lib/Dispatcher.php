@@ -10,7 +10,6 @@ class Dispatcher {
 
     function dispatch() {
         $uri = $_SERVER['REQUEST_URI'];
-        $uri = strtok($uri);
         $uri = trim($uri,'/');
 
         $uriParts = explode('/', $uri);
@@ -32,7 +31,7 @@ class Dispatcher {
         $ctrl = new $controller();
 
         $view = new View();
-        $view = $ctrl->$action($view);
+        $ctrl->$action($view);
 
         $rtView = new RootView($view);
         $rtView->display();
