@@ -18,8 +18,8 @@
         <a href="/" class="brand-logo center">PicDB</a>
         <ul class="left">
             <li><a href="/">Home</a></li>
-            <li><a href="/galeries">Galerien ansehen</a></li>
-            <li><a href="/user">Profil</a></li>
+            <li><a href="/Galery">Galerien ansehen</a></li>
+            <li><a href="/User">Profil</a></li>
             <?php /* if ($sessionManager->isSignedIn()) { ?>
                 <li><a href="/blog?blogId=<?= $sessionManager->getUserId() ?>">Member-Bereich</a></li>
             <?php } */ ?>
@@ -31,8 +31,8 @@
             </ul
         <?php } else { ?>
             <ul class="right">
-                <li><a href="/user/login">Anmelden</a></li>
-                <li><a href="/user/register">Registrieren</a></li>
+                <li><a href="/User/login">Anmelden</a></li>
+                <li><a href="/User/register">Registrieren</a></li>
             </ul>
         <?php } ?>
 

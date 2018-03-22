@@ -36,7 +36,9 @@ if (isset($_GET["registered"]) && $_GET["registered"] == "true") {
     <?php
 }
 ?>
-<div class="row row-centered">
+<div class="container formcontainer">
+    <h1 class="jumbotron-heading">ANMELDEN</h1>
+    <p class="lead text-muted">Registriere dich um alle Features zu nutzen! Noch keinen Account? <a href="/User/register">Registrieren.</a></p>
     <form class="col input-form" method="post">
         <div class="row">
             <div class="input-field col s12">

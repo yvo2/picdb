@@ -4,10 +4,10 @@ global $config;
 $config = array(
     "deploy"    => 'live',
     "database" => array(
-        "host"      => 'localhost:3307',
+        "host"      => 'localhost:3306',
         "username"  => 'root',
         "password"  => '',
-        "database"  => 'routedb'
+        "database"  => 'picdb'
     )
 );
 ?>
