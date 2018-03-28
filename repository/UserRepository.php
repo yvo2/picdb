@@ -39,10 +39,10 @@ class UserRepository extends Repository
         return $result->num_rows != 0;
     }
 
-    public function create($email, $password) {
+    public function create($email, $password, $displayname) {
         $password = hash ("sha256" , $password);
-        $prepared = $this->db->prepare("INSERT INTO $this->table (email, password) VALUES (?, ?)");
-        $prepared->bind_param('ss', $email, $password);
+        $prepared = $this->db->prepare("INSERT INTO $this->table (email, password, displayname) VALUES (?, ?, ?)");
+        $prepared->bind_param('sss', $email, $password, $displayname);
 
         $prepared->execute();
 

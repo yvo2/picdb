@@ -1,3 +1,8 @@
+<?php
+require_once './lib/SessionManager.php';
+
+$sessionManager = new SessionManager();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,10 +29,10 @@
                 <li><a href="/blog?blogId=<?= $sessionManager->getUserId() ?>">Member-Bereich</a></li>
             <?php } */ ?>
         </ul>
-        <?php if (false) { ?>
+        <?php if ($sessionManager->isSignedIn()) { ?>
             <ul class="right">
-                <li><a href="/member<?php if (isset($selectedBlog)) { echo "?blogId=".$selectedBlog; } ?>">Hallo <?= $sessionManager->getUser()->name ?></a></li>
-                <li><a href="/user/logout<?php if (isset($selectedBlog)) { echo "?blogId=".$selectedBlog; } ?>">Abmelden</a></li>
+                <li><a href="/User">Hallo <?= $sessionManager->getUser()->Displayname ?></a></li>
+                <li><a href="/User/logout">Abmelden</a></li>
             </ul
         <?php } else { ?>
             <ul class="right">

@@ -15,7 +15,7 @@ class SessionManager {
             return $user;
         }
         $userRepository = new UserRepository();
-        $user = (object) $userRepository->readById($_SESSION["userId"]);
+        $user = (object) $userRepository->readById($_SESSION["userId"])->fetch_object();
         $user->signedIn = true;
         return $user;
     }

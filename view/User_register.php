@@ -2,6 +2,8 @@
     <h1 class="jumbotron-heading">REGISTRIEREN</h1>
     <p class="lead text-muted">Registriere dich um alle Features zu nutzen! Bereits einen Account? <a href="/User/login">Anmelden.</a></p>
     <form method="post" class="rt-register">
+        <label class="text-muted" for="rt-password">Anzeigenamen: </label><input value="<?= $displayname ?>" placeholder="Anzeigenamen" class="form-control" id="rt-displayname" name="rt-displayname" type="text"><br>
+        <div class="rt-validation" id="validation-displayname"><?= $displayNameValidationMessage ?></div>
         <label class="text-muted" for="rt-email">Email: </label><input value="<?= $email ?>" placeholder="Email-Adresse" class="form-control" id="rt-email" name="rt-email" type="email" onchange="emLength()"><br>
         <div class="rt-validation" id="validation-email"><?= $emailValidationMessage ?></div>
         <label class="text-muted" for="rt-password">Passwort: </label><input placeholder="Passwort" class="form-control" id="rt-password" name="rt-password" type="password" onchange="pwLength()"><br>

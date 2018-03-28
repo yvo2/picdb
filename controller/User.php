@@ -28,12 +28,9 @@ class User {
             }
             if (!$view->invalid) {
                 $sessionHandler = new SessionManager();
-                var_dump($sessionHandler->isSignedIn());
-                $user = $userRepository->getByCredentials($email, $password);
-                $sessionHandler->signInAsId($user->id);
-                global $config;
-                $path = $config["path"];
-                header("Location:{$path}user?blogId=" . $user->id);
+                $user = $userRepository->getByCredentials($email, $password)->fetch_object();
+                $sessionHandler->signInAsId($user->Id);
+                header("Location:/User");
                 die("Login successfull.");
             }
         }
@@ -49,11 +46,13 @@ class User {
         $view->emailValidationMessage = '';
         $view->passwordValidationMessage = '';
         $view->passwordValidationRepeatMessage = '';
+        $view->displayNameValidationMessage = '';
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             @$email = htmlspecialchars($_POST["rt-email"]);
             @$password = htmlspecialchars($_POST["rt-password"]);
             @$passwordrepeat = htmlspecialchars($_POST["rt-password-repeat"]);
+            @$displayname = htmlspecialchars($_POST["rt-displayname"]);
             // Validate email
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $view->emailValidationMessage = "Bitte eine valide Email-Addresse eingeben.";
@@ -67,6 +66,14 @@ class User {
                 $view->passwordValidationRepeatMessage = "Bitte das Passwort wiederholen.";
                 $view->valid = false;
             }
+            if (strlen($displayname) > 32) {
+                $view->displayNameValidationMessage = "Bitte einen kürzeren Anzeigenamen verwenden (Maximal 32 Zeichen).";
+                $view->valid = false;
+            }
+            if (strlen($displayname) < 4) {
+                $view->displayNameValidationMessage = "Bitte längeren Anzeigenamen verwenden (Mindestens 5 Zeichen).";
+                $view->valid = false;
+            }
             if (!($passwordrepeat == $password)) {
                 $view->passwordValidationRepeatMessage = "Bitte das Passwort korrekt wiederholen.";
                 $view->valid = false;
@@ -78,7 +85,7 @@ class User {
             if ($view->valid) {
                 try {
                     // Create user in database
-                    $id = $userRepository->create($email, $password);
+                    $id = $userRepository->create($email, $password, $displayname);
                     $sessionManager->signInAsId($id);
                     header("Location: /User/registersuccess");
                     die('<a href="/User/registersuccess">Weiter.</a>');
@@ -87,7 +94,21 @@ class User {
                 }
             }
             $view->email = $email;
+            $view->displayname = $displayname;
         }
     }
 
+    public function registersuccess($view) {
+        $view->setName('User_registersuccess');
+    }
+
+    public function index($view) {
+        $view->setName('User');
+    }
+
+    public function logout($view) {
+        session_destroy();
+        header('Location: /');
+        die('Logged out successfully');
+    }
 }
