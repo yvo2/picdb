@@ -43,6 +43,7 @@ class User {
         $view->title = "Register";
         $view->valid = true;
         $view->email = '';
+        $view->displayname = '';
         $view->emailValidationMessage = '';
         $view->passwordValidationMessage = '';
         $view->passwordValidationRepeatMessage = '';
