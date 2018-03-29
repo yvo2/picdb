@@ -1,4 +1,6 @@
 <?php
+require_once "lib/SessionManager.php";
+
 class View {
     private $name;
     public $properties = array();
@@ -23,6 +25,17 @@ class View {
     public function display() {
         extract($this->properties);
         require "view/$this->name.php";
+    }
+
+    public function login() {
+        $sessionManager = new SessionManager();
+
+        if (!$sessionManager->isSignedIn()) {
+            $this->setName("Meta_login");
+            $rtView = new RootView($this);
+            $rtView->display();
+            die();
+        }
     }
 }
 ?>
