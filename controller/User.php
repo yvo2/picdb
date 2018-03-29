@@ -51,8 +51,8 @@ class User {
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             @$email = htmlspecialchars($_POST["rt-email"]);
-            @$password = htmlspecialchars($_POST["rt-password"]);
-            @$passwordrepeat = htmlspecialchars($_POST["rt-password-repeat"]);
+            @$password = $_POST["rt-password"];
+            @$passwordrepeat = $_POST["rt-password-repeat"];
             @$displayname = htmlspecialchars($_POST["rt-displayname"]);
             // Validate email
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

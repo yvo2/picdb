@@ -1,0 +1,1 @@
+<a href="/Gallery/create">+ Galerie erstellen</a>

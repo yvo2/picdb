@@ -23,7 +23,7 @@ $sessionManager = new SessionManager();
         <a href="/" class="brand-logo center">PicDB</a>
         <ul class="left">
             <li><a href="/">Home</a></li>
-            <li><a href="/Galery">Galerien ansehen</a></li>
+            <li><a href="/Gallery">Galerien</a></li>
             <li><a href="/User">Profil</a></li>
             <?php /* if ($sessionManager->isSignedIn()) { ?>
                 <li><a href="/blog?blogId=<?= $sessionManager->getUserId() ?>">Member-Bereich</a></li>
