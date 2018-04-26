@@ -11,6 +11,7 @@ class Dispatcher {
     function dispatch() {
         $uri = $_SERVER['REQUEST_URI'];
         $uri = trim($uri,'/');
+        $uri = explode('?', $uri)[0];
 
         $uriParts = explode('/', $uri);
 

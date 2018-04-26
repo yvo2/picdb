@@ -8,6 +8,7 @@ $config = array(
         "username"  => 'root',
         "password"  => '',
         "database"  => 'picdb'
-    )
+    ),
+    "datapath" => 'C:\newxampp\htdocs\picdb_pictures'
 );
 ?>

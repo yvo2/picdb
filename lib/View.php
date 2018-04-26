@@ -37,5 +37,12 @@ class View {
             die();
         }
     }
+
+    public function noAccess() {
+        $this->setName("Meta_noAccess");
+        $rtView = new RootView($this);
+        $rtView->display();
+        die();
+    }
 }
 ?>

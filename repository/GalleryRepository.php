@@ -17,4 +17,21 @@ class GalleryRepository extends Repository
         return $prepared->insert_id;
     }
 
+    public function getByUser($user) {
+        $prepared = $this->db->prepare("SELECT Name, Id FROM $this->table WHERE User_Id = ?;");
+        $prepared->bind_param('i', $user->Id);
+
+        $prepared->execute();
+
+        $result = $prepared->get_result();
+
+        $galleries = array();
+
+        while($row = $result->fetch_assoc()) {
+            $galleries[] = $row;
+        }
+
+        return $galleries;
+    }
+
 }
