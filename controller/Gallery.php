@@ -1,7 +1,9 @@
 <?php
 require_once './repository/GalleryRepository.php';
+require_once './repository/PictureRepository.php';
 require_once './lib/SessionManager.php';
 require_once './config/config.php';
+require_once './tools/ImageTools.php';
 
 class Gallery {
 
@@ -86,10 +88,13 @@ class Gallery {
 
         $sessionManager = new SessionManager();
         $galleryRepository = new GalleryRepository();
+        $pictureRepository = new PictureRepository();
 
         $gallery = $galleryRepository->readById($_POST['galleryId'])->fetch_object();
 
-        if ($gallery->User_Id == $sessionManager->getUser()->Id) {
+        if ($gallery->User_Id != $sessionManager->getUser()->Id) {
+            var_dump($gallery->User_Id);
+            var_dump($sessionManager->getUser()->Id);
             $view->noAccess();
             return;
         }
@@ -98,7 +103,7 @@ class Gallery {
         var_dump($_FILES["picture"]);
 
         global $config;
-        $target_file = $config['datapath'] . "/" . $gallery->Id;
+        $target_file = $config['datapath'] . "/" . $gallery->Id . $pictureRepository->nextId() . ".png";
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
         // Check if image file is a actual image or fake image
@@ -113,6 +118,9 @@ class Gallery {
 
         if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file)) {
             echo "The file ". basename( $_FILES["picture"]["name"]). " has been uploaded.";
+
+            $imageTools = new ImageTools();
+            $imageTools->createThumbnail($_FILES["picture"]["tmp_name"], $target_file, 200);
         } else {
             echo "Sorry, there was an error uploading your file.";
         }
