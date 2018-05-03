@@ -28,6 +28,9 @@ class GalleryRepository extends Repository
         $galleries = array();
 
         while($row = $result->fetch_assoc()) {
+            //XSS prevention
+            $row["Name"] = htmlspecialchars($row["Name"]);
+
             $galleries[] = $row;
         }
 
