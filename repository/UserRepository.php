@@ -11,22 +11,27 @@ class UserRepository extends Repository
     }
 
     function getByCredentials($email, $password) {
-        $password = hash("sha256", $password);
 
-        $prepared = $this->db->prepare("SELECT * FROM User WHERE email = ? AND password = ?");
-        $prepared->bind_param('ss', $email, $password);
+        $prepared = $this->db->prepare("SELECT * FROM User WHERE email = ?");
+        $prepared->bind_param('s', $email);
 
         $prepared->execute();
 
-        $result = $prepared->get_result();
+        $result = $prepared->get_result()->fetch_object();
 
-        return $result;
+        $password = hash("sha256", $password . $result->salt);
+
+        if ($result->Password == $password) {
+            return $result;
+        }
+
+        return null;
     }
 
     function checkCredentials($email, $password) {
         $result = $this->getByCredentials($email, $password);
 
-        return $result->num_rows != 0;
+        return $result != null;
     }
 
     function existsEmail($email) {
@@ -39,10 +44,22 @@ class UserRepository extends Repository
         return $result->num_rows != 0;
     }
 
+    function generateRandomString($length) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
     public function create($email, $password, $displayname) {
-        $password = hash ("sha256" , $password);
-        $prepared = $this->db->prepare("INSERT INTO $this->table (email, password, displayname) VALUES (?, ?, ?)");
-        $prepared->bind_param('sss', $email, $password, $displayname);
+        $salt = $this->generateRandomString(20);
+
+        $password = hash ("sha256" , $password . $salt);
+        $prepared = $this->db->prepare("INSERT INTO $this->table (email, password, displayname, salt) VALUES (?, ?, ?, ?)");
+        $prepared->bind_param('ssss', $email, $password, $displayname, $salt);
 
         $prepared->execute();
 

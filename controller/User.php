@@ -28,7 +28,7 @@ class User {
             }
             if (!$view->invalid) {
                 $sessionHandler = new SessionManager();
-                $user = $userRepository->getByCredentials($email, $password)->fetch_object();
+                $user = $userRepository->getByCredentials($email, $password);
                 $sessionHandler->signInAsId($user->Id);
                 header("Location:/User");
                 die("Login successfull.");
