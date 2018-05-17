@@ -25,8 +25,6 @@ class PictureRepository extends Repository
         $prepared->bind_param('ii', $currentPictureId, $galleryId);
         $response = $prepared->execute();
 
-        var_dump($response);
-
         return $response;
     }
 

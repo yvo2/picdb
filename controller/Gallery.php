@@ -109,21 +109,20 @@ class Gallery {
         // Check if image file is a actual image or fake image
         $check = getimagesize($_FILES["picture"]["tmp_name"]);
         if($check !== false) {
-            echo "File is an image - " . $check["mime"] . ".";
             $uploadOk = 1;
         } else {
             echo "File is not an image.";
             $uploadOk = 0;
         }
 
-        if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file . ".image")) {
-            echo "The file ". basename( $_FILES["picture"]["name"]). " has been uploaded.";
-
+        if ($uploadOk & move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file . ".image")) {
             // Generate thumbnail
             $imageTools = new ImageTools();
             $imageTools->createThumbnail($target_file . ".image", $target_file . ".thumb.image", 200);
 
             $pictureRepository->add($currentPictureId, $gallery->Id);
+
+            header('Location: /Gallery/single?id='.$gallery->Id);
         } else {
             echo "Sorry, there was an error uploading your file.";
         }
