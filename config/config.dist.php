@@ -6,7 +6,7 @@ $config = array(
     "database" => array(
         "host"      => 'localhost:3306',
         "username"  => 'root',
-        "password"  => '',
+        "password"  => 'gibbiX12345',
         "database"  => 'picdb'
     ),
     "datapath" => 'C:\newxampp\htdocs\picdb_pictures'

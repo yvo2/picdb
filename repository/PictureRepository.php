@@ -13,10 +13,21 @@ class PictureRepository extends Repository
         $prepared->execute();
         $result = $prepared->get_result();
 
-        if (!$result) {
+        if ($result->num_rows == 0) {
             return 1;
         }
 
         return $result->fetch_object()->Id + 1;
+    }
+
+    public function add($currentPictureId, $galleryId)
+    {
+        $prepared = $this->db->prepare("INSERT INTO $this->table (Id, Gallery_id) VALUES (?, ?)");
+        $prepared->bind_param('ii', $currentPictureId, $galleryId);
+        $response = $prepared->execute();
+
+        var_dump($response);
+
+        return $response;
     }
 }

@@ -99,11 +99,9 @@ class Gallery {
             return;
         }
 
-        var_dump($_POST);
-        var_dump($_FILES["picture"]);
-
         global $config;
-        $target_file = $config['datapath'] . "/" . $gallery->Id . $pictureRepository->nextId() . ".png";
+        $currentPictureId = $pictureRepository->nextId();
+        $target_file = $config['datapath'] . "/" . $gallery->Id . "_" . $currentPictureId;
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
         // Check if image file is a actual image or fake image
@@ -116,11 +114,14 @@ class Gallery {
             $uploadOk = 0;
         }
 
-        if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file)) {
+        if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file . ".image")) {
             echo "The file ". basename( $_FILES["picture"]["name"]). " has been uploaded.";
 
+            // Generate thumbnail
             $imageTools = new ImageTools();
-            $imageTools->createThumbnail($_FILES["picture"]["tmp_name"], $target_file, 200);
+            $imageTools->createThumbnail($target_file . ".image", $target_file . ".thumb.image", 200);
+
+            $pictureRepository->add($currentPictureId, $gallery->Id);
         } else {
             echo "Sorry, there was an error uploading your file.";
         }
