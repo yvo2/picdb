@@ -54,11 +54,13 @@ class Gallery {
 
         $sessionManager = new SessionManager();
         $galleryRepository = new GalleryRepository();
+        $pictureRepository = new PictureRepository();
 
         $gallery = $galleryRepository->readById($_GET['id'])->fetch_object();
 
         if ($gallery->User_Id == $sessionManager->getUser()->Id) {
             $view->gallery = $gallery;
+            $view->pictures = $pictureRepository->getAllPictures($gallery->Id);
             return;
         } else {
             $view->noAccess();

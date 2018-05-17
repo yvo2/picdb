@@ -20,8 +20,7 @@ class PictureRepository extends Repository
         return $result->fetch_object()->Id + 1;
     }
 
-    public function add($currentPictureId, $galleryId)
-    {
+    public function add($currentPictureId, $galleryId) {
         $prepared = $this->db->prepare("INSERT INTO $this->table (Id, Gallery_id) VALUES (?, ?)");
         $prepared->bind_param('ii', $currentPictureId, $galleryId);
         $response = $prepared->execute();
@@ -29,5 +28,20 @@ class PictureRepository extends Repository
         var_dump($response);
 
         return $response;
+    }
+
+    public function getAllPictures($galleryId) {
+        $prepared = $this->db->prepare("SELECT * FROM $this->table WHERE Gallery_id = ?");
+        $prepared->bind_param('s', $galleryId);
+        $prepared->execute();
+        $result = $prepared->get_result();
+
+        $pictures = array();
+
+        while ($row = $result->fetch_object()) {
+            $pictures[] = $row;
+        }
+
+        return $pictures;
     }
 }
