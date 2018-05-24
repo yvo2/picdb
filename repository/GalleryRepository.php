@@ -8,9 +8,9 @@ class GalleryRepository extends Repository
         parent::__construct("gallery");
     }
 
-    public function create($user, $name) {
-        $prepared = $this->db->prepare("INSERT INTO $this->table (Name, User_Id) VALUES (?, ?)");
-        $prepared->bind_param('si', $name, $user->Id);
+    public function create($user, $name, $description) {
+        $prepared = $this->db->prepare("INSERT INTO $this->table (Name, User_Id, Description) VALUES (?, ?, ?)");
+        $prepared->bind_param('sis', $name, $user->Id, $description);
 
         $prepared->execute();
 
@@ -18,7 +18,7 @@ class GalleryRepository extends Repository
     }
 
     public function getByUser($user) {
-        $prepared = $this->db->prepare("SELECT Name, Id FROM $this->table WHERE User_Id = ?;");
+        $prepared = $this->db->prepare("SELECT Name, Id, Description FROM $this->table WHERE User_Id = ?;");
         $prepared->bind_param('i', $user->Id);
 
         $prepared->execute();
@@ -30,11 +30,26 @@ class GalleryRepository extends Repository
         while($row = $result->fetch_assoc()) {
             //XSS prevention
             $row["Name"] = htmlspecialchars($row["Name"]);
+            $row["Description"] = htmlspecialchars($row["Description"]);
 
             $galleries[] = $row;
         }
 
         return $galleries;
+    }
+
+    public function updateGallery($id, $name, $description) {
+        $prepared = $this->db->prepare("UPDATE $this->table SET Name = ?, Description = ? WHERE Id = ?");
+        $prepared->bind_param('ssi', $name, $description, $id);
+        $prepared->execute();
+    }
+
+    public function delete($id) {
+        $prepared = $this->db->prepare("DELETE FROM $this->table WHERE Id = ?");
+        $prepared->bind_param('i', $id);
+        $response = $prepared->execute();
+
+        return $response;
     }
 
 }

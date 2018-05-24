@@ -26,6 +26,10 @@ class Picture {
         $picture = $pictureRepository->readById($id)->fetch_object();
         $gallery = $galleryRepository->readById($picture->Gallery_id)->fetch_object();
 
+        if ($sessionManager->getUser()->Id != $gallery->User_Id) {
+            die("No access");
+        }
+
         $path = $config["datapath"]."\\".$gallery->Id."_".$picture->Id;
 
         $extension = $thumb ? ".thumb.image" : ".image";
@@ -36,6 +40,100 @@ class Picture {
         header('Content-type: '.$image_mime);
 
         echo $image;
+        die();
+    }
+
+    public function delete($view) {
+        $id = $_GET["id"];
+
+        $sessionManager = new SessionManager();
+        $pictureRepository = new PictureRepository();
+        $galleryRepository = new GalleryRepository();
+
+        $picture = $pictureRepository->readById($id)->fetch_assoc();
+        $gallery = $galleryRepository->readById($picture["Gallery_id"])->fetch_object();
+
+        $view->picture = $picture;
+
+        if ($sessionManager->getUser()->Id != $gallery->User_Id) {
+            $view->noAccess();
+            die();
+        }
+
+        $view->setName("Picture_delete");
+    }
+
+    public function doDelete($view) {
+        $id = $_POST["id"];
+
+        $sessionManager = new SessionManager();
+        $pictureRepository = new PictureRepository();
+        $galleryRepository = new GalleryRepository();
+
+        $picture = $pictureRepository->readById($id)->fetch_assoc();
+        $gallery = $galleryRepository->readById($picture["Gallery_id"])->fetch_object();
+
+        if ($sessionManager->getUser()->Id != $gallery->User_Id) {
+            $view->noAccess();
+            die();
+        }
+
+        $pictureRepository->delete($id);
+
+        global $config;
+        $path = $config["datapath"]."\\".$gallery->Id."_".$picture["Id"];
+        unlink($path . ".image");
+        unlink($path . ".thumb.image");
+        header("Location: /Gallery/single?id=".$gallery->Id);
+        die();
+    }
+
+    public function edit($view) {
+        $id = $_GET["id"];
+
+        $sessionManager = new SessionManager();
+        $pictureRepository = new PictureRepository();
+        $galleryRepository = new GalleryRepository();
+
+        $picture = $pictureRepository->readById($id)->fetch_assoc();
+        $gallery = $galleryRepository->readById($picture["Gallery_id"])->fetch_object();
+
+        $view->picture = $picture;
+
+        if ($sessionManager->getUser()->Id != $gallery->User_Id) {
+            $view->noAccess();
+            die();
+        }
+
+        $view->setName("Picture_edit");
+    }
+
+    public function doEdit($view) {
+        $id = $_POST["id"];
+        $description = $_POST["description"];
+
+        if (strlen($description) > 1024) {
+            $view->galleryValidation = "Die Beschreibung muss kürzer als 1024 Zeichen sein.";
+            return;
+        }
+
+        $sessionManager = new SessionManager();
+        $pictureRepository = new PictureRepository();
+        $galleryRepository = new GalleryRepository();
+
+        $picture = $pictureRepository->readById($id)->fetch_assoc();
+        $gallery = $galleryRepository->readById($picture["Gallery_id"])->fetch_object();
+
+        $view->picture = $picture;
+
+        if ($sessionManager->getUser()->Id != $gallery->User_Id) {
+            $view->noAccess();
+            die();
+        }
+
+        $pictureRepository->updateDescription($picture["Id"], $description);
+
+        header("Location: /Gallery/single?id=".$gallery->Id);
         die();
     }
 

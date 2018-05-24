@@ -46,3 +46,20 @@ input:focus:-ms-input-placeholder { color:transparent; } /* oldIE ;) */
 .rt-validation {
     color: red;
 }
+
+#modal {
+    width: min-content;
+    height: min-content;
+    min-height: 80vh;
+}
+
+#picture {
+    max-width: 89vw;
+    max-height: 70vh;
+    margin: 0 auto;
+    display: block;
+}
+
+#description {
+    padding: 20px;
+}

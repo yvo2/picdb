@@ -20,9 +20,9 @@ class PictureRepository extends Repository
         return $result->fetch_object()->Id + 1;
     }
 
-    public function add($currentPictureId, $galleryId) {
-        $prepared = $this->db->prepare("INSERT INTO $this->table (Id, Gallery_id) VALUES (?, ?)");
-        $prepared->bind_param('ii', $currentPictureId, $galleryId);
+    public function add($currentPictureId, $galleryId, $description) {
+        $prepared = $this->db->prepare("INSERT INTO $this->table (Id, Gallery_id, Description) VALUES (?, ?, ?)");
+        $prepared->bind_param('iis', $currentPictureId, $galleryId, $description);
         $response = $prepared->execute();
 
         return $response;
@@ -36,10 +36,26 @@ class PictureRepository extends Repository
 
         $pictures = array();
 
-        while ($row = $result->fetch_object()) {
+        while ($row = $result->fetch_assoc()) {
+            $row["Description"] = htmlspecialchars($row["Description"]);
+
             $pictures[] = $row;
         }
 
         return $pictures;
+    }
+
+    public function delete($id) {
+        $prepared = $this->db->prepare("DELETE FROM $this->table WHERE Id = ?");
+        $prepared->bind_param('i', $id);
+        $response = $prepared->execute();
+
+        return $response;
+    }
+
+    public function updateDescription($id, $description) {
+        $prepared = $this->db->prepare("UPDATE $this->table SET Description = ? WHERE Id = ?");
+        $prepared->bind_param('si', $description, $id);
+        $prepared->execute();
     }
 }
