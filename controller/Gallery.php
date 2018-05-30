@@ -116,17 +116,6 @@ class Gallery {
         $gallery = $galleryRepository->readById($id)->fetch_object();
 
         if ($gallery->User_Id == $sessionManager->getUser()->Id) {
-
-            $images = $pictureRepository->getAllPictures($gallery->Id);
-
-            foreach($images as $image) {
-                global $config;
-                $path = $config["datapath"]."\\".$gallery->Id."_".$image["Id"];
-                unlink($path . ".image");
-                unlink($path . ".thumb.image");
-                $pictureRepository->delete($image["Id"]);
-            }
-
             $galleryRepository->delete($gallery->Id);
             header('Location: /Gallery');
             die();

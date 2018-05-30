@@ -105,6 +105,97 @@ class User {
 
     public function index($view) {
         $view->setName('User');
+        $view->login();
+
+        $sessionManager = new SessionManager();
+        $userRepository = new UserRepository();
+
+        $user = $sessionManager->getUser();
+
+        $view->displayname = htmlspecialchars($user->Displayname);
+        $view->email = htmlspecialchars($user->Email);
+
+        $view->valid = true;
+        $view->emailValidationMessage = '';
+        $view->passwordValidationMessage = '';
+        $view->passwordValidationRepeatMessage = '';
+        $view->displayNameValidationMessage = '';
+        $view->changeSuccess = '';
+        $view->passwordChangeSuccess = '';
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            @$email = htmlspecialchars($_POST["rt-email"]);
+            @$password = $_POST["rt-password"];
+            @$passwordrepeat = $_POST["rt-password-repeat"];
+            @$displayname = htmlspecialchars($_POST["rt-displayname"]);
+
+            $wantsChangePassword = $password != "";
+
+            // Validate email
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $view->emailValidationMessage = "Bitte eine valide Email-Addresse eingeben.";
+                $view->valid = false;
+            }
+            if (strlen($password) < 8 && $wantsChangePassword) {
+                $view->passwordValidationMessage = "Bitte Passwort eingeben, welches mindestens 8 Zeichen lang ist.";
+                $view->valid = false;
+            }
+            if (strlen($passwordrepeat) < 8 && $wantsChangePassword) {
+                $view->passwordValidationRepeatMessage = "Bitte das Passwort wiederholen.";
+                $view->valid = false;
+            }
+            if (strlen($displayname) > 32) {
+                $view->displayNameValidationMessage = "Bitte einen kürzeren Anzeigenamen verwenden (Maximal 32 Zeichen).";
+                $view->valid = false;
+            }
+            if (strlen($displayname) < 4) {
+                $view->displayNameValidationMessage = "Bitte längeren Anzeigenamen verwenden (Mindestens 5 Zeichen).";
+                $view->valid = false;
+            }
+            if (!($passwordrepeat == $password)) {
+                $view->passwordValidationRepeatMessage = "Bitte das Passwort korrekt wiederholen.";
+                $view->valid = false;
+            }
+            if ($userRepository->existsEmail($email) && $email != $user->Email) {
+                $view->emailValidationMessage = "Diese Email-Addresse ist bereits vergeben.";
+                $view->valid = false;
+            }
+            if ($view->valid) {
+                try {
+                    // Create user in database
+                    $userRepository->changeInfo($user->Id, $email, $displayname);
+
+                    $view->email = $email;
+                    $view->displayname = $displayname;
+                    $view->changeSuccess = "Deine Änderungen wurden gespeichert.";
+
+                    if ($wantsChangePassword) {
+                        $userRepository->changePassword($user->Id, $password);
+                        $view->passwordChangeSuccess = "Dein neues Passwort wurde übernommen.";
+                    }
+                    return;
+                } catch (Exception $e) {
+                    die('Ein Fehler ist aufgetreten.');
+                }
+            }
+            $view->email = $email;
+            $view->displayname = $displayname;
+        }
+    }
+
+    public function doDelete($view) {
+        $view->login();
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $sessionManager = new SessionManager();
+            $user = $sessionManager->getUser();
+
+            $userRepository = new UserRepository();
+            $userRepository->delete($user->Id);
+
+            session_destroy();
+            header("Location: /");
+            die("Deleted!");
+        }
     }
 
     public function logout($view) {

@@ -47,6 +47,10 @@ input:focus:-ms-input-placeholder { color:transparent; } /* oldIE ;) */
     color: red;
 }
 
+.rt-success {
+    color: green;
+}
+
 #modal {
     width: min-content;
     height: min-content;

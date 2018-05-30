@@ -2,6 +2,7 @@
 
 require_once './lib/Repository.php';
 require_once './database/ConnectionManager.php';
+require_once './repository/GalleryRepository.php';
 
 class UserRepository extends Repository
 {
@@ -66,4 +67,39 @@ class UserRepository extends Repository
         return $prepared->insert_id;
     }
 
+    public function changeInfo($id, $email, $displayname) {
+        $prepared = $this->db->prepare("UPDATE $this->table SET Email = ?, Displayname = ? WHERE Id = ?");
+        $prepared->bind_param('ssi', $email, $displayname, $id);
+
+        $prepared->execute();
+
+        return $prepared->insert_id;
+    }
+
+    public function changePassword($id, $password) {
+        $salt = $this->generateRandomString(20);
+
+        $password = hash ("sha256" , $password . $salt);
+        $prepared = $this->db->prepare("UPDATE $this->table SET Password = ?, salt = ? WHERE Id = ?");
+        $prepared->bind_param('ssi', $password, $salt, $id);
+
+        $prepared->execute();
+
+        return $prepared->insert_id;
+    }
+
+    public function delete($id) {
+        $galleryRepository = new GalleryRepository();
+        $galleries = $galleryRepository->getAllGalleries($id);
+
+        foreach($galleries as $gallery) {
+            $galleryRepository->delete($gallery["Id"]);
+        }
+
+        $prepared = $this->db->prepare("DELETE FROM $this->table WHERE Id = ?");
+        $prepared->bind_param('i', $id);
+        $response = $prepared->execute();
+
+        return $response;
+    }
 }

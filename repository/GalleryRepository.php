@@ -1,5 +1,8 @@
 <?php
 require_once 'lib/Repository.php';
+require_once 'repository/UserRepository.php';
+require_once 'repository/PictureRepository.php';
+require_once 'config/config.php';
 
 class GalleryRepository extends Repository
 {
@@ -45,11 +48,37 @@ class GalleryRepository extends Repository
     }
 
     public function delete($id) {
+        $pictureRepository = new PictureRepository();
+        $images = $pictureRepository->getAllPictures($id);
+
+        foreach($images as $image) {
+            global $config;
+            $path = $config["datapath"]."\\".$id."_".$image["Id"];
+            unlink($path . ".image");
+            unlink($path . ".thumb.image");
+            $pictureRepository->delete($image["Id"]);
+        }
+
         $prepared = $this->db->prepare("DELETE FROM $this->table WHERE Id = ?");
         $prepared->bind_param('i', $id);
         $response = $prepared->execute();
 
         return $response;
+    }
+
+    public function getAllGalleries($galleryId) {
+        $prepared = $this->db->prepare("SELECT * FROM $this->table WHERE User_id = ?");
+        $prepared->bind_param('s', $galleryId);
+        $prepared->execute();
+        $result = $prepared->get_result();
+
+        $pictures = array();
+
+        while ($row = $result->fetch_assoc()) {
+            $pictures[] = $row;
+        }
+
+        return $pictures;
     }
 
 }
