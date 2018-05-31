@@ -3,11 +3,11 @@
 set_error_handler("customError");
 
 function customError($errno, $errstr) {
-    $viewCompatMode = true;
-
     if (error_reporting() == 0) {
         return;
     }
+
+    $viewCompatMode = true;
 
     if (strpos($errstr, 'HY000/2002') !== false) {
         printError("Die Verbindung zu der Datenbank ist fehlgeschlagen. Bitte versuchen sie es später erneut.");
