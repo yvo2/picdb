@@ -31,17 +31,21 @@ $sessionManager = new SessionManager();
                 <li><a href="/blog?blogId=<?= $sessionManager->getUserId() ?>">Member-Bereich</a></li>
             <?php } */ ?>
         </ul>
-        <?php if ($sessionManager->isSignedIn()) { ?>
-            <ul class="right">
-                <li><a href="/User">Hallo <?= $sessionManager->getUser()->Displayname ?></a></li>
-                <li><a href="/User/logout">Abmelden</a></li>
-            </ul
-        <?php } else { ?>
-            <ul class="right">
-                <li><a href="/User/login">Anmelden</a></li>
-                <li><a href="/User/register">Registrieren</a></li>
-            </ul>
-        <?php } ?>
+        <?php
+        if (!isset($viewCompatMode) || !$viewCompatMode) {
+            if ($sessionManager->isSignedIn()) { ?>
+                <ul class="right">
+                    <li><a href="/User">Hallo <?= $sessionManager->getUser()->Displayname ?></a></li>
+                    <li><a href="/User/logout">Abmelden</a></li>
+                </ul
+            <?php } else { ?>
+                <ul class="right">
+                    <li><a href="/User/login">Anmelden</a></li>
+                    <li><a href="/User/register">Registrieren</a></li>
+                </ul>
+            <?php }
+        }
+        ?>
 
     </div>
 </nav>

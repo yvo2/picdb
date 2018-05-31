@@ -6,10 +6,6 @@ class ConnectionManager
 
     public static function initialize($host, $user, $pass, $db) {
         ConnectionManager::$mysqli = new mysqli($host, $user, $pass, $db);
-
-        if (ConnectionManager::$mysqli->connect_errno) {
-            die("Connection to DB failed. Application halted.");
-        }
     }
 
     public static function obtainConnection() {

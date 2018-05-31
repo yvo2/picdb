@@ -20,6 +20,10 @@ class UserRepository extends Repository
 
         $result = $prepared->get_result()->fetch_object();
 
+        if ($result == null) {
+            return null;
+        }
+
         $password = hash("sha256", $password . $result->salt);
 
         if ($result->Password == $password) {

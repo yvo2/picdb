@@ -3,8 +3,20 @@
 class ImageTools
 {
     function createThumbnail($src, $dest, $desired_width) {
-        /* read the source image */
-        $source_image = imagecreatefromjpeg($src);
+        $mime_type = image_type_to_mime_type(exif_imagetype($src));
+        switch($mime_type) {
+            case 'image/jpeg':
+            case 'image/jpg':
+                $source_image = imagecreatefromjpeg($src);
+                break;
+            case 'image/png':
+                $source_image = imagecreatefrompng($src);
+                break;
+            case 'image/gif':
+                $source_image = imagecreatefromgif($src);
+                break;
+        }
+
         $width = imagesx($source_image);
         $height = imagesy($source_image);
 

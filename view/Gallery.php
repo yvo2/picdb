@@ -7,7 +7,7 @@
         <div class="col s3">
             <div class="card">
                 <div class="card-image">
-                    <img src="http://materializecss.com/images/sample-1.jpg">
+                    <img src="/frontend/pics/gallery.jpg">
                     <span class="card-title"><?= $gallery['Name'] ?></span>
                 </div>
                 <div class="card-action">

@@ -1,4 +1,6 @@
 <?php
+require_once 'lib/ErrorHandler.php';
+
 session_start();
 
 require_once 'lib/Dispatcher.php';
