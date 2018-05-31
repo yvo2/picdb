@@ -7,6 +7,7 @@ function customError($errno, $errstr) {
         return;
     }
 
+    global $viewCompatMode;
     $viewCompatMode = true;
 
     if (strpos($errstr, 'HY000/2002') !== false) {
@@ -19,6 +20,7 @@ function customError($errno, $errstr) {
 }
 
 function printError($msg) {
+    global $viewCompatMode;
     require_once "view/Header.php";
     echo "<div class='content'><h1>Systemfehler</h1><p>Es ist ein Fehler auf dem Server aufgetreten.</p><p>$msg</p></div>";
     require_once "view/Footer.php";
