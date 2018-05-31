@@ -75,6 +75,9 @@ class GalleryRepository extends Repository
         $pictures = array();
 
         while ($row = $result->fetch_assoc()) {
+            $row["Name"] = htmlspecialchars($row["Name"]);
+            $row["Description"] = htmlspecialchars($row["Description"]);
+
             $pictures[] = $row;
         }
 

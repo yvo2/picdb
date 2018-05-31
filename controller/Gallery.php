@@ -61,6 +61,8 @@ class Gallery {
         $pictureRepository = new PictureRepository();
 
         $gallery = $galleryRepository->readById($_GET['id'])->fetch_object();
+        $gallery->Name = htmlspecialchars($gallery->Name);
+        $gallery->Description = htmlspecialchars($gallery->Description);
 
         if ($gallery->User_Id == $sessionManager->getUser()->Id) {
             $view->gallery = $gallery;
@@ -79,6 +81,8 @@ class Gallery {
         $galleryRepository = new GalleryRepository();
 
         $gallery = $galleryRepository->readById($_GET['id'])->fetch_object();
+        $gallery->Name = htmlspecialchars($gallery->Name);
+        $gallery->Description = htmlspecialchars($gallery->Description);
 
         if ($gallery->User_Id == $sessionManager->getUser()->Id) {
             $view->gallery = $gallery;
@@ -96,6 +100,8 @@ class Gallery {
         $galleryRepository = new GalleryRepository();
 
         $gallery = $galleryRepository->readById($_GET['id'])->fetch_object();
+        $gallery->Name = htmlspecialchars($gallery->Name);
+        $gallery->Description = htmlspecialchars($gallery->Description);
 
         if ($gallery->User_Id == $sessionManager->getUser()->Id) {
             $view->gallery = $gallery;
@@ -114,6 +120,8 @@ class Gallery {
         $pictureRepository = new PictureRepository();
 
         $gallery = $galleryRepository->readById($id)->fetch_object();
+        $gallery->Name = htmlspecialchars($gallery->Name);
+        $gallery->Description = htmlspecialchars($gallery->Description);
 
         if ($gallery->User_Id == $sessionManager->getUser()->Id) {
             $galleryRepository->delete($gallery->Id);
@@ -132,6 +140,8 @@ class Gallery {
         $galleryRepository = new GalleryRepository();
 
         $gallery = $galleryRepository->readById($_GET['id'])->fetch_object();
+        $gallery->Name = htmlspecialchars($gallery->Name);
+        $gallery->Description = htmlspecialchars($gallery->Description);
 
         if ($gallery->User_Id == $sessionManager->getUser()->Id) {
             $view->gallery = $gallery;
@@ -152,6 +162,8 @@ class Gallery {
         $galleryRepository = new GalleryRepository();
 
         $gallery = $galleryRepository->readById($id)->fetch_object();
+        $gallery->Name = htmlspecialchars($gallery->Name);
+        $gallery->Description = htmlspecialchars($gallery->Description);
 
         if ($gallery->User_Id == $sessionManager->getUser()->Id) {
             $galleryRepository->updateGallery($id, $name, $description);
@@ -179,6 +191,8 @@ class Gallery {
         $pictureRepository = new PictureRepository();
 
         $gallery = $galleryRepository->readById($_POST['galleryId'])->fetch_object();
+        $gallery->Name = htmlspecialchars($gallery->Name);
+        $gallery->Description = htmlspecialchars($gallery->Description);
 
         if ($gallery->User_Id != $sessionManager->getUser()->Id) {
             $view->noAccess();
@@ -195,13 +209,12 @@ class Gallery {
         if($check !== false) {
             $uploadOk = 1;
         } else {
-            echo "File is not an image.";
-            $uploadOk = 0;
+            printError("Dieses Format wird derzeit nicht unterstützt oder entspricht keinem gängigen Bild-Format (JPEG/PNG/GIF).");
+            return;
         }
 
         if($_FILES["picture"]["size"] > 4000000) {
-            $view->galleryValidation = "Das Bild muss kleiner als 4MB sein (aktuelle Grösse: " . ($_FILES["picture"]["size"] / 1000000) . "MB)";
-            die($view->galleryValidation);
+            printError("Das Bild muss kleiner als 4MB sein (aktuelle Grösse: " . ($_FILES["picture"]["size"] / 1000000) . "MB)");
             return;
         }
 
@@ -214,7 +227,7 @@ class Gallery {
 
             header('Location: /Gallery/single?id='.$gallery->Id);
         } else {
-            echo "Sorry, there was an error uploading your file.";
+            printError("Unbekannter Upload-Fehler.");
         }
     }
 
