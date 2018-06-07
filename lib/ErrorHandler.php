@@ -22,7 +22,7 @@ function customError($errno, $errstr) {
 function printError($msg) {
     global $viewCompatMode;
     require_once "view/Header.php";
-    echo "<div class='content'><h1>Systemfehler</h1><p>Es ist ein Fehler auf dem Server aufgetreten.</p><p>$msg</p></div>";
+    echo "<div class='content'><h1>Systemfehler</h1><p>Es ist ein Fehler auf dem Server aufgetreten.</p><p>$msg</p></div><button class='btn btn-primary' onclick='history.back();'>Zurück</button>";
     require_once "view/Footer.php";
     die();
 }

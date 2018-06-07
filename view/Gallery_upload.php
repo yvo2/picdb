@@ -14,6 +14,8 @@
         </div>
 
         <input class="btn" type="submit" value="Upload">
+        <a href="/Gallery/single?id=<?= $gallery->Id ?>" class="btn" style="margin-left: 20px;">Zurück</a>
+
         <input name="galleryId" type="hidden" value="<?= $gallery->Id ?>">
     </div>
 </form>
